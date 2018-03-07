@@ -18,14 +18,12 @@ export default class Router {
    * @param {boolean} [options.startListening=true] - Initiate listen on construct
    */
   constructor(options) {
-    this.options = Object.assign(
-      {
-        debug: false,
-        context: window,
-        startListening: true
-      },
-      options
-    );
+    this.options = {
+      debug: false,
+      context: window,
+      startListening: true,
+      ...options
+    };
 
     this.isListening = false;
     this.routes = [];
@@ -38,7 +36,7 @@ export default class Router {
 
   /**
    * Add a new route
-   * @param {string|RegExp} route - Name of route to match
+   * @param {string|RegExp|function} route - Name of route to match
    * @param {function} handler - Method to execute when route matches
    * @returns {Router} - This router instance
    */
@@ -48,6 +46,14 @@ export default class Router {
     if (typeof route === 'function') {
       handler = route;
       newRoute = '';
+    }
+
+    let params = newRoute.match(/({\w+})/gi);
+
+    if (params) {
+      for (const param of params) {
+        newRoute = newRoute.replace(param, '(\\w+)');
+      }
     }
 
     newRoute = new RegExp(newRoute);
@@ -92,25 +98,30 @@ export default class Router {
    */
   check() {
     const hash = this.currentRoute;
-    let hasMatch = false;
 
-    for (let route of this.routes) {
+    for (const route of this.routes) {
       const match = hash.match(route.route);
 
       if (match !== null) {
         match.shift();
-        route.handler.apply({}, match);
-        hasMatch = true;
+
+        let args = [];
+
+        for (let i = 0; i < match.length; i++) {
+          args.push(match[i])
+        }
+
+        route.handler(...args);
 
         if (this.options.debug) {
           log(`Fetching: /${hash}`);
         }
+
+        return this;
       }
     }
 
-    if (!hasMatch) {
-      this.navigateError(hash);
-    }
+    this.navigateError(hash);
 
     return this;
   }
