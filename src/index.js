@@ -52,7 +52,7 @@ export default class Router {
 
     if (params) {
       for (const param of params) {
-        newRoute = newRoute.replace(param, '(\\w+)');
+        newRoute = newRoute.replace(param, '(\[\\w-+*=()$|,;%{}:"\\[\\]\]+)');
       }
     }
 
