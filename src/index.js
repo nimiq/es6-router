@@ -85,7 +85,7 @@ export default class Router {
           args.push(match[i])
         }
 
-        route.handler(...args);
+        route.handler(args);
 
         if (this.options.debug) {
           log(`Fetching: /${hash}`);
