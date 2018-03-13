@@ -54,13 +54,16 @@ export default class Router {
       for (const param of params) {
         newRoute = newRoute.replace(param, '(\[\\w-+*=()$|,;%{}:"\\[\\]\]+)');
       }
+
+      params = params.map(param => param.substr(1, param.length - 2));
     }
 
     newRoute = new RegExp(newRoute);
 
     this.routes = this.routes.concat({
       route: newRoute,
-      handler
+      handler,
+      params
     });
 
     return this;
@@ -79,10 +82,10 @@ export default class Router {
       if (match !== null) {
         match.shift();
 
-        let args = [];
+        let args = new Map();
 
         for (let i = 0; i < match.length; i++) {
-          args.push(match[i])
+          args.set(route.params[i], match[i]);
         }
 
         route.handler(args);
