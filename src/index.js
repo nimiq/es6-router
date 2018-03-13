@@ -67,32 +67,6 @@ export default class Router {
   }
 
   /**
-   * Remove a route from the router
-   * @param {string|RegExp} route - Name of route to remove
-   * @param {function} [handler] - Function handler to remove
-   * @returns {Router} - This router instance
-   */
-  remove(route, handler) {
-    const routeName = String(new RegExp(route));
-
-    this.routes = this.routes.filter(
-      activeRoute =>
-        String(new RegExp(activeRoute.route)) !== routeName ||
-        (handler ? activeRoute.handler !== handler : false)
-    );
-
-    return this;
-  }
-
-  /**
-   * Reload the current route
-   * @returns {Router} - This router instance
-   */
-  reload() {
-    return this.check();
-  }
-
-  /**
    * Recheck the path and reload the page
    * @returns {Router} - This router instance
    */
