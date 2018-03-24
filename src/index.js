@@ -41,7 +41,8 @@ export default class Router {
    * @returns {Router} - This router instance
    */
   add(route, handler) {
-    let newRoute = Router.cleanPath(route);
+    // let newRoute = Router.cleanPath(route);
+    let newRoute = route;
 
     if (typeof route === 'function') {
       handler = route;
@@ -57,6 +58,7 @@ export default class Router {
 
       params = params.map(param => param.substr(1, param.length - 2));
     }
+
 
     newRoute = new RegExp(newRoute);
 
@@ -98,9 +100,7 @@ export default class Router {
       }
     }
 
-    this.navigateError(hash);
-
-    return this;
+    return this.navigateError(hash);
   }
 
   /**
