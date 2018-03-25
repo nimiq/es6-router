@@ -148,14 +148,11 @@ export default class Router {
    */
   navigate(path) {
     if (this.options.debug) {
-      log(`Redirecting to: /${Router.cleanPath(path || '')}`);
+      log(`Redirecting to: /${ Router.cleanPath(path || '') }`);
     }
 
-    this.options.context.history.pushState(
-      null,
-      null,
-      '#/' + Router.cleanPath(path || '')
-    );
+    const cleanPath = Router.cleanPath(path || '');
+    this.options.context.history.pushState({ path: cleanPath }, null, `#/${ cleanPath }`);
 
     if (path !== 'error') {
       window.dispatchEvent(new Event('hashchange'));
