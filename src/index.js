@@ -43,26 +43,27 @@ export default class Router {
   add(route, handler) {
     // let newRoute = Router.cleanPath(route);
     let newRoute = route;
+    let params = null;
 
     if (typeof route === 'function') {
-      handler = route;
-      newRoute = '';
+        [ newRoute, handler ] = [ '', route ];
     }
 
-    let params = newRoute.match(/({\w+})/gi);
+    if (!(route instanceof RegExp)) {
+        let params = newRoute.match(/({\w+})/gi);
 
-    if (params) {
-      for (const param of params) {
-        newRoute = newRoute.replace(param, '(\[\\w-+*=()$|,;%{}:"\\[\\]\]+)');
-      }
+        if (params) {
+            for (const param of params) {
+                newRoute = newRoute.replace(param, '(\[\\w-+*=()$|,;%{}:"\\[\\]\]+)');
+            }
 
-      params = params.map(param => param.substr(1, param.length - 2));
+            params = params.map(param => param.substr(1, param.length - 2));
+        }
+
+        newRoute = new RegExp(newRoute);
     }
 
-
-    newRoute = new RegExp(newRoute);
-
-    this.routes = this.routes.concat({
+    this.routes.push({
       route: newRoute,
       handler,
       params
