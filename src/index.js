@@ -18,12 +18,11 @@ export default class Router {
    * @param {boolean} [options.startListening=true] - Initiate listen on construct
    */
   constructor(options) {
-    this.options = {
+    this.options = Object.assign({}, {
       debug: false,
       context: window,
       startListening: true,
-      ...options
-    };
+    }, options);
 
     this.isListening = false;
     this.routes = [];
