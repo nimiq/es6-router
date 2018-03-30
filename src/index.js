@@ -194,7 +194,9 @@ export default class Router {
       return '';
     }
 
-    return String(path).replace(/^#+\/+|^\/+#+|^\/+|^#+|\/+$|\?(.*)$/g, '');
+    // return String(path).replace(/^#+\/+|^\/+#+|^\/+|^#+|\/+$|\?(.*)$/g, '');
+    // keep trailing slashes! it's important to differ between folder and folder/ for recursive routing
+    return String(path).replace(/^#+\/+|^\/+#+|^\/+|^#+|\?(.*)$/g, '');
   }
 
   static parseRoute(route) {
